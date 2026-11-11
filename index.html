@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isaac Waithaka Portfolio</title>
+<meta name="description" content="Isaac Waithaka, mechanical engineering senior at UW Tacoma (Class of 2027). Design, FEA, machining, and test projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=B612:wght@400;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: the page reads like a drawing set. The opener is a sheet with zone ticks and a title block;
+   each project is its own sheet, numbered by its real course number. */
+:root {
+  --paper: #eef2f3;
+  --sheet: #f9fbfb;
+  --ink: #172026;
+  --muted: #4d5a62;
+  --hair: #c6d0d5;
+  --dim: #1d58b3;
+  --font-display: "B612", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --measure: 66ch;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11181c; --sheet: #172127; --ink: #e2e9ec; --muted: #a7b4bb; --hair: #2c3a42; --dim: #8db1f0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11181c; --sheet: #172127; --ink: #e2e9ec; --muted: #a7b4bb; --hair: #2c3a42; --dim: #8db1f0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.55;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--dim); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--dim); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; line-height: 1.15; }
+p { margin: 0; max-width: var(--measure); }
+.wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+/* top bar */
+.bar { border-bottom: 1px solid var(--hair); background: var(--paper); position: sticky; top: 0; z-index: 5; }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; flex-wrap: wrap; }
+.bar strong { font-family: var(--font-display); font-size: 0.95rem; letter-spacing: 0.02em; }
+.bar nav { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.98rem; }
+.bar nav a { color: var(--ink); text-decoration: none; }
+.bar nav a:hover { color: var(--dim); text-decoration: underline; }
+
+/* opener: drawing sheet with zone ticks */
+.sheet-frame {
+  margin: 32px 0 8px; border: 1.5px solid var(--ink); background: var(--sheet);
+  display: grid; grid-template-columns: 22px 1fr; grid-template-rows: 22px 1fr;
+}
+.zones-top, .zones-left { display: flex; font-family: var(--font-display); font-size: 0.7rem; color: var(--muted); }
+.zones-top { grid-column: 2; border-bottom: 1px solid var(--hair); }
+.zones-top span { flex: 1; text-align: center; line-height: 22px; border-left: 1px solid var(--hair); }
+.zones-left { grid-row: 2; flex-direction: column; border-right: 1px solid var(--hair); }
+.zones-left span { flex: 1; display: grid; place-items: center; border-top: 1px solid var(--hair); }
+.corner { border-right: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+.sheet-body { grid-column: 2; grid-row: 2; padding: clamp(24px, 4vw, 48px); display: grid; gap: 32px; grid-template-columns: 1.35fr 1fr; align-items: end; }
+.sheet-body h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); letter-spacing: -0.01em; }
+.lede { margin-top: 18px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--ink); }
+.lede-sub { margin-top: 10px; color: var(--muted); }
+
+/* title block: the drawing convention for who, what, and revision */
+.titleblock { border: 1.5px solid var(--ink); display: grid; grid-template-columns: 1fr 1fr; font-size: 0.95rem; }
+.titleblock div { padding: 8px 10px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.titleblock div:nth-child(2n) { border-right: 0; }
+.titleblock div.span { grid-column: 1 / -1; border-right: 0; }
+.titleblock div:last-child { border-bottom: 0; }
+.titleblock b { display: block; font-family: var(--font-display); font-size: 0.66rem; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+.titleblock span { font-variant-numeric: tabular-nums; }
+
+/* sections */
+section { padding: 56px 0 8px; }
+.section-head { display: flex; align-items: baseline; gap: 16px; border-bottom: 1.5px solid var(--ink); padding-bottom: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.section-head h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+.section-head p { color: var(--muted); }
+
+/* one sheet per project */
+.proj { background: var(--sheet); border: 1px solid var(--hair); margin-bottom: 28px; }
+.proj-head { display: grid; grid-template-columns: auto 1fr auto; border-bottom: 1px solid var(--hair); }
+.proj-head > * { padding: 12px 16px; }
+.dwg { font-family: var(--font-display); font-size: 0.8rem; color: var(--dim); border-right: 1px solid var(--hair); display: grid; align-content: center; min-width: 108px; }
+.dwg small { display: block; color: var(--muted); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.proj-head h3 { font-size: clamp(1.15rem, 2.2vw, 1.45rem); align-self: center; }
+.meta { color: var(--muted); font-size: 0.92rem; text-align: right; align-self: center; }
+.status { display: inline-block; font-size: 0.8rem; padding: 1px 8px; border: 1px solid var(--dim); color: var(--dim); border-radius: 2px; margin-left: 6px; white-space: nowrap; }
+.proj-body { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 22px 16px 24px; }
+.proj-body.text-only { grid-template-columns: 1.2fr 1fr; }
+.copy { display: grid; gap: 12px; align-content: start; }
+.copy h4 { font-family: var(--font-display); font-size: 0.82rem; color: var(--muted); margin: 6px 0 -6px; font-weight: 400; }
+.copy ul { margin: 0; padding-left: 1.1em; max-width: var(--measure); }
+.copy li + li { margin-top: 4px; }
+
+/* spec table: the numbers a reviewer checks */
+.spec { width: 100%; border-collapse: collapse; font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.spec th, .spec td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.spec th { font-weight: 500; color: var(--muted); width: 46%; }
+.spec td { font-weight: 600; }
+.spec tr:last-child th, .spec tr:last-child td { border-bottom: 0; }
+
+.figs { display: grid; gap: 14px; align-content: start; }
+figure { margin: 0; background: #fff; border: 1px solid var(--hair); }
+figure img { width: 100%; }
+figcaption { font-size: 0.88rem; color: var(--muted); padding: 8px 10px; border-top: 1px solid var(--hair); background: var(--sheet); }
+.strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: #fff; }
+.strip img { padding: 10px; height: 170px; object-fit: contain; border-right: 1px solid var(--hair); }
+.strip img:last-child { border-right: 0; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* more work, skills */
+.minor { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.minor article { background: var(--sheet); border: 1px solid var(--hair); padding: 16px; display: grid; gap: 8px; align-content: start; }
+.minor h3 { font-size: 1.05rem; }
+.minor .dwg-inline { font-family: var(--font-display); font-size: 0.75rem; color: var(--dim); }
+.skills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border: 1px solid var(--hair); background: var(--sheet); }
+.skills div { padding: 14px 16px; border-bottom: 1px solid var(--hair); }
+.skills div:nth-child(odd) { border-right: 1px solid var(--hair); }
+.skills h3 { font-size: 0.95rem; margin-bottom: 4px; }
+.about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
+.about .copy p + p { margin-top: 4px; }
+footer { margin-top: 56px; border-top: 1.5px solid var(--ink); padding: 20px 0 40px; color: var(--muted); font-size: 0.92rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .sheet-body, .proj-body, .proj-body.text-only, .about { grid-template-columns: 1fr; }
+  .minor { grid-template-columns: 1fr; }
+  .skills { grid-template-columns: 1fr; }
+  .skills div:nth-child(odd) { border-right: 0; }
+  .proj-head { grid-template-columns: auto 1fr; }
+  .meta { grid-column: 1 / -1; text-align: left; border-top: 1px solid var(--hair); }
+}
+@media (max-width: 480px) {
+  .strip { grid-template-columns: repeat(2, 1fr); }
+  .strip img:nth-child(2) { border-right: 0; }
+  .pair { grid-template-columns: 1fr; }
+  .zones-top span:nth-child(n+5) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <strong>Isaac Waithaka</strong>
+    <nav aria-label="Sections">
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="sheet-frame">
+    <div class="corner" aria-hidden="true"></div>
+    <div class="zones-top" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+    <div class="zones-left" aria-hidden="true"><span>A</span><span>B</span><span>C</span></div>
+    <div class="sheet-body">
+      <div>
+        <h1>Isaac Waithaka</h1>
+        <p class="lede">Mechanical engineering senior. I design parts in CAD, check them by hand and with FEA, then build and measure them.</p>
+        <p class="lede-sub">Looking for a new graduate mechanical engineering role in clean energy hardware, starting June 2027.</p>
+      </div>
+      <div class="titleblock" aria-label="Summary">
+        <div class="span"><b>Name</b><span>Isaac Waithaka</span></div>
+        <div><b>Degree</b><span>B.S. Mechanical Engineering</span></div>
+        <div><b>Graduates</b><span>June 2027</span></div>
+        <div><b>School</b><span>University of Washington Tacoma</span></div>
+        <div><b>GPA</b><span>3.76</span></div>
+        <div><b>Based in</b><span>Tacoma, WA</span></div>
+        <div><b>Relocation</b><span>Open</span></div>
+        <div class="span"><b>CAD and analysis</b><span>SolidWorks, MATLAB, Python, Simulink</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="projects" aria-labelledby="projects-h">
+    <div class="section-head">
+      <h2 id="projects-h">Projects</h2>
+      <p>Labeled with the course number each was built for.</p>
+    </div>
+
+    <!-- Capstone -->
+    <article class="proj">
+      <div class="proj-head">
+        <div class="dwg"><small>Capstone</small>TPU 2026</div>
+        <h3>Alder Dam intake gate crane redesign</h3>
+        <div class="meta">Team project for Tacoma Public Utilities <span class="status">In progress</span></div>
+      </div>
+      <div class="proj-body text-only">
+        <div class="copy">
+          <p>Tacoma Power's Alder Dam on the Nisqually River uses a crane to raise and lower its intake gates. Our senior design team is redesigning the crane's trolley, hoist, and travel drive machinery as a plug and play replacement.</p>
+          <p>We review the current machinery arrangement, give Tacoma Public Utilities alternative solutions to review, then prepare drawings, calculations, and analysis for the selected design and build a small scale prototype.</p>
+          <h4>My part so far</h4>
+          <p>I'm testing whether our industry advisor's SolidWorks weldment library works for the trolley's structural frame layout.</p>
+        </div>
+        <table class="spec" aria-label="Capstone scope">
+          <tr><th>Site</th><td>Alder Dam, 50 MW hydro plant (Tacoma Power)</td></tr>
+          <tr><th>Hoist design</th><td>Horsepower, motor, gear reduction and reducer, wire rope, rope drum</td></tr>
+          <tr><th>Trolley design</th><td>Frame and travel drive machinery</td></tr>
+          <tr><th>Deliverables</th><td>Drawings, calculations, analysis, small scale prototype</td></tr>
+          <tr><th>Timeline</th><td>Fall 2026 to spring 2027</td></tr>
+        </table>
+      </div>
+    </article>
+
+    <!-- Hook -->
+    <article class="proj">
+      <div class="proj-head">
+        <div class="dwg"><small>Course</small>TME 341</div>
+        <h3>Patient lift hook: design, hand calculations, and FEA</h3>
+        <div class="meta">Mechanical Design I, team of 4, winter 2026</div>
+      </div>
+      <div class="proj-body">
+        <div class="copy">
+          <p>The hook is the load path between a patient lift's boom and the sling, hung between two 0.5 in pins 4 in apart. It had to carry 500 lbf with a safety factor of 2 and stay stiffer than 1,000 lbf/in, cut from 0.25 in nylon, aluminum, or acrylic plate.</p>
+          <ul>
+            <li>Treated the critical section as a tie plus a beam in bending and solved for its depth with a MATLAB root finder (h = 0.613 in).</li>
+            <li>Ran the same geometry in SolidWorks Simulation: 24.9 ksi against 22.5 ksi by hand, a 10.7% gap we traced to the curved, irregular section. Raised h to 0.67 in to keep the safety factor.</li>
+            <li>Removed material from low stress regions across four concepts, then checked waterjet tolerances, cut edge quality, and nesting on 1/4 in 6061 plate.</li>
+          </ul>
+          <table class="spec" aria-label="Hook results">
+            <tr><th>Safety factor (von Mises)</th><td>2.03 (2.0 required)</td></tr>
+            <tr><th>Stiffness</th><td>17,325 lbf/in (1,000 required)</td></tr>
+            <tr><th>Mass</th><td>0.18 lbm, down 38% from 0.29</td></tr>
+            <tr><th>Hand calculation vs FEA</th><td>10.7% difference</td></tr>
+            <tr><th>Estimated unit cost</th><td>$0.18</td></tr>
+          </table>
+        </div>
+        <div class="figs">
+          <figure>
+            <div class="strip">
+              <img src="assets/hook-concept-1.jpg" alt="Concept 1: rectangular baseline hook shape" loading="lazy">
+              <img src="assets/hook-concept-2.jpg" alt="Concept 2: hook fitted to the design area" loading="lazy">
+              <img src="assets/hook-concept-3.jpg" alt="Concept 3: filleted hook with reinforced pin holes" loading="lazy">
+              <img src="assets/hook-concept-4.jpg" alt="Concept 4: tapered hook, deepest at mid length" loading="lazy">
+            </div>
+            <figcaption>Team concepts 1 to 4. Concept 4 tapers so the section is deepest where the moment peaks.</figcaption>
+          </figure>
+          <div class="pair">
+            <figure>
+              <img src="assets/hook-fea-stress.jpg" alt="Von Mises stress plot of the final hook under 500 lbf" loading="lazy">
+              <figcaption>Von Mises stress, final design, 500 lbf. Peak on the inner curve, where hand calculations predicted.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/hook-matlab-h.jpg" alt="MATLAB plot of the stress function crossing zero at h equals 0.613 inches" loading="lazy">
+              <figcaption>MATLAB root finding for the section depth h.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Gearbox -->
+    <article class="proj">
+      <div class="proj-head">
+        <div class="dwg"><small>Course</small>TME 342</div>
+        <h3>Planetary gearbox for a robotic elbow</h3>
+        <div class="meta">Mechanical Design II, team of 9 in three sub teams</div>
+      </div>
+      <div class="proj-body text-only">
+        <div class="copy">
+          <p>A three stage planetary gearbox for a robotic elbow joint, driven by a 100 W motor at 4,000 RPM and packed into a 5 x 5 x 5 in envelope. I led the three person gear team.</p>
+          <ul>
+            <li>Sized each planetary stage, modeled the gears in SolidWorks, and 3D printed PLA prototypes.</li>
+            <li>Ran tolerance studies on the printed gears that set ±0.1 mm backlash so the stages meshed in the assembled joint.</li>
+            <li>Checked bending and contact safety factors to AGMA 2001-D04 in a parametric MATLAB script, comparing PLA with AISI 4140 steel.</li>
+            <li>Gear dimensions were the reference the shaft and housing teams built around, so our numbers had to be settled first.</li>
+          </ul>
+        </div>
+        <table class="spec" aria-label="Gearbox numbers">
+          <tr><th>Reduction</th><td>80:1 over 3 stages</td></tr>
+          <tr><th>Input</th><td>100 W at 4,000 RPM</td></tr>
+          <tr><th>Envelope</th><td>5 x 5 x 5 in</td></tr>
+          <tr><th>Gear module</th><td>1.5 mm, FDM printed PLA</td></tr>
+          <tr><th>Backlash</th><td>±0.1 mm, set by tolerance study</td></tr>
+          <tr><th>Rating check</th><td>AGMA 2001-D04, PLA vs AISI 4140</td></tr>
+        </table>
+      </div>
+    </article>
+
+    <!-- Machining -->
+    <article class="proj">
+      <div class="proj-head">
+        <div class="dwg"><small>Course</small>TME 345</div>
+        <h3>Machined multitool and plumb bob, inspected to the drawing</h3>
+        <div class="meta">Machining, solo</div>
+      </div>
+      <div class="proj-body">
+        <div class="copy">
+          <p>A three part aluminum multitool (jaw, bottle opener arm, slotted driver arm) cut on CNC and manual mills and joined with press fit pins, and a steel plumb bob turned on a lathe with a 30 degree taper and a tapped 3/8-16 UNC blind hole.</p>
+          <ul>
+            <li>Inspected 28 features with calipers, micrometers, gauge pins, and a dial indicator. 8 were out of tolerance.</li>
+            <li>Traced the flatness and parallelism misses to the mill table setup, and to measuring only at the end, when it was too late for a corrective pass.</li>
+            <li>For a rebuild: measure after every operation and use a fly cutter on datum faces. For volume: fixture plates and full CNC for the arms, casting for the jaw, and in line measurement.</li>
+          </ul>
+          <table class="spec" aria-label="Machining numbers">
+            <tr><th>Features inspected</th><td>28</td></tr>
+            <tr><th>Out of tolerance</th><td>8</td></tr>
+            <tr><th>Tightest callout</th><td>Plumb bob taper runout, 0.005 in</td></tr>
+            <tr><th>Machines</th><td>CNC mill, manual mill, lathe</td></tr>
+          </table>
+        </div>
+        <div class="figs">
+          <figure>
+            <img src="assets/machining-jaw-drawing.jpg" alt="Course drawing of the multitool jaw with GD&amp;T callouts" loading="lazy">
+            <figcaption>Course drawing for the jaw. I machined to these callouts.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/machining-inspection.jpg" alt="Inspection sheet with measured values and notes for each feature" loading="lazy">
+            <figcaption>My inspection sheet with measured values and notes.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- Acoustic -->
+    <article class="proj">
+      <div class="proj-head">
+        <div class="dwg"><small>Course</small>TME 311</div>
+        <h3>Hearing 3D print infill in the printer's sound</h3>
+        <div class="meta">Computer Modeling, solo</div>
+      </div>
+      <div class="proj-body">
+        <div class="copy">
+          <p>Can a phone microphone tell two print settings apart? I recorded a Bambu A1 printing the same 40 x 20 x 10 mm prism at 15% and 80% infill, from 1 m away at 44 kHz, then analyzed the audio in MATLAB and Python.</p>
+          <ul>
+            <li>Compared the runs with FFT magnitude spectra, power spectral density, 1/3 octave band levels, and spectrograms.</li>
+            <li>The 80 to 125 Hz bands stayed strong in both runs. At 80% infill, the 315 Hz band became dominant, consistent with constant back and forth infill motion exciting a mid frequency resonance.</li>
+            <li>Next step: more trials, and pairing audio with accelerometer data to tie each band to an axis of motion.</li>
+          </ul>
+        </div>
+        <div class="figs">
+          <figure>
+            <img src="assets/acoustic-octave-15.jpg" alt="One third octave band levels at 15 percent infill" loading="lazy">
+            <figcaption>1/3 octave band levels, 15% infill.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/acoustic-octave-80.jpg" alt="One third octave band levels at 80 percent infill with a tall 315 hertz band" loading="lazy">
+            <figcaption>80% infill. The 315 Hz band rises to the top.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <!-- Flume -->
+    <article class="proj">
+      <div class="proj-head">
+        <div class="dwg"><small>Course</small>TME 332</div>
+        <h3>Breakwater shapes in a flow visualization flume</h3>
+        <div class="meta">Fluid Mechanics, solo report</div>
+      </div>
+      <div class="proj-body">
+        <div class="copy">
+          <p>Five 3D printed breakwater geometries (semicircular, arc end, quarter circle, bumped, and cut faces) tested one at a time in a dye injected laminar flow flume, mounted in the same place and orientation for a fair comparison.</p>
+          <ul>
+            <li>Concave faces formed compact, intense recirculation zones. Bumped and cut faces spread the disturbance along the slope, like the rough armor on rubble mound breakwaters.</li>
+            <li>Stated the limits plainly: steady laminar flow is not waves, so the next steps are a wave flume, image based wake measurements, and CFD.</li>
+          </ul>
+        </div>
+        <div class="figs">
+          <figure>
+            <img src="assets/flume-semicircle.jpg" alt="Dye streamlines splitting around a yellow semicircular model" loading="lazy">
+            <figcaption>Semicircular model: flow splits and recirculates inside the curve.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/flume-bumps.jpg" alt="Dye flow over a sloped model with spherical bumps" loading="lazy">
+            <figcaption>Bumped slope: smaller disturbances spread along the face.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+
+    <div class="minor" aria-label="More work">
+      <article>
+        <span class="dwg-inline">Marine energy course, summer 2026</span>
+        <h3>Admiralty Inlet tidal array</h3>
+        <p>In a UW Tacoma course supported by the Pacific Marine Energy Center, our team analyzed tidal current data from Admiralty Inlet in Puget Sound and pitched a cross flow turbine array for the site.</p>
+      </article>
+      <article>
+        <span class="dwg-inline">TME 320</span>
+        <h3>Materials testing lab</h3>
+        <p>Tensile, hardness, Charpy impact, and fatigue tests on 1018 steel, 1045 steel, and 6061 aluminum, comparing strength, toughness, and fatigue behavior.</p>
+      </article>
+      <article>
+        <span class="dwg-inline">Personal project <span class="status">In progress</span></span>
+        <h3>ESP32 self balancing robot</h3>
+        <p>Comparing PID and ADRC balance control: both modeled in Simulink with sensor noise, center of gravity offset, and disturbance tests, with C++ firmware written in the Arduino IDE.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills" aria-labelledby="skills-h">
+    <div class="section-head"><h2 id="skills-h">Skills and credentials</h2></div>
+    <div class="skills">
+      <div><h3>CAD and analysis</h3><p>SolidWorks parts, assemblies, drawings, weldments, and Simulation. Fusion 360 (basic). MATLAB, Simulink, Python, C++, Excel.</p></div>
+      <div><h3>Shop and inspection</h3><p>CNC and manual mill, lathe, FDM 3D printing, drilling and tapping. Calipers, micrometers, dial indicator, gauge pins.</p></div>
+      <div><h3>Methods</h3><p>GD&amp;T drawings, tolerance analysis, design for manufacturing, checking FEA against hand calculations, root cause analysis.</p></div>
+      <div><h3>Coursework topics</h3><p>Bolted joints and fasteners, thin wall pressure vessels, pumps, piping, heat exchangers, fuel cells and electrolysis, power plant engineering.</p></div>
+      <div><h3>Certifications</h3><p>SolidWorks CSWA exam, Part 2 passed. MathWorks Simulink Onramp and Signal Processing Onramp.</p></div>
+      <div><h3>Languages</h3><p>English and Swahili, both fluent.</p></div>
+    </div>
+  </section>
+
+  <section id="about" aria-labelledby="about-h">
+    <div class="section-head"><h2 id="about-h">About</h2></div>
+    <div class="about">
+      <div class="copy">
+        <p>I'm a senior in mechanical engineering at the University of Washington Tacoma, graduating in June 2027 with a 3.76 GPA, after an associate degree from Tacoma Community College. I'm a member of the UWT Engineering Club.</p>
+        <p>The work I want is clean energy hardware: electrolyzers, wind, tidal, and the test stands and fixtures that prove them out. My tidal energy course with the Pacific Marine Energy Center made that direction concrete.</p>
+        <p>Since 2023 I've also worked day and overnight shifts as a direct support professional at Ambitions of Washington. That job runs on following safety protocols exactly and writing clear incident reports, and I've trained new staff on those protocols.</p>
+      </div>
+      <table class="spec" aria-label="Quick facts">
+        <tr><th>Degree</th><td>B.S. Mechanical Engineering, June 2027</td></tr>
+        <tr><th>Also</th><td>A.S. Mechanical Engineering, Tacoma Community College, 2024</td></tr>
+        <tr><th>Location</th><td>Tacoma, WA, open to relocation</td></tr>
+        <tr><th>Available</th><td>Full time from late June 2027</td></tr>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <p>Email: <a href="mailto:issaka25473@gmail.com">issaka25473@gmail.com</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/isaac-waithaka">linkedin.com/in/isaac-waithaka</a></p>
+    <p>Figures are from my course reports. Photos of the printed gearbox and machined parts are coming.</p>
+  </div>
+</footer>
+</body>
+</html>
